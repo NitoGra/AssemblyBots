@@ -1,5 +1,4 @@
-﻿using Mono.Cecil;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
@@ -7,17 +6,21 @@ using UnityEngine.AI;
 [RequireComponent(typeof(NavMeshAgent), typeof(Animator))]
 public class Unit : MonoBehaviour
 {
+    private readonly float _divideVelocityThenTakeCoin = 4;
+
+    [Range(0,1)]
+    [SerializeField] private float _volume = 0.5f;
     [SerializeField] private float _speed = 1;
     [field: SerializeField] public bool IsBusy { get; private set; }
 
     private bool _isOnBase = true;
     private NavMeshAgent _agent;
     private Animator _animator;
-
     private Vector3 _basePosition;
     private Vector3 _target;
     private AudioSource _audio;
     private List<Resource> _resources = new();
+
     public event Action<List<Resource>> ResourceTakenOnBase;
 
     private void OnEnable()
@@ -25,6 +28,7 @@ public class Unit : MonoBehaviour
         _animator = GetComponent<Animator>();
         _agent = GetComponent<NavMeshAgent>();
         _audio = GetComponent<AudioSource>();
+        _audio.volume = _volume;
     }
 
     private void OnTriggerEnter(Collider other)
@@ -60,7 +64,7 @@ public class Unit : MonoBehaviour
         _resources.Add(resource);
         resource.transform.parent = transform;
         resource.TakeCoin();
-        _agent.velocity = Vector3.zero;
+        _agent.velocity = _agent.velocity/ _divideVelocityThenTakeCoin;
 
         if (resource.transform.position == _target)
             GoToBase(); 
@@ -90,8 +94,6 @@ public class Unit : MonoBehaviour
     private void Deactivation()
     {
         this.ResourceTakenOnBase.Invoke(_resources);
-
-        _audio.volume = _resources.Count / 10f;
         _audio.Play();
 
         _agent.speed = 0;
