@@ -8,6 +8,7 @@ public class Resource : MonoBehaviour
     [field: SerializeField] public int Value { get; private set; } = 1;
 
     private Rigidbody _rigidbody;
+    private Collider _collider;
     private float _delayToTryTakeAgain = 6;
     private WaitForSeconds _wait;
 
@@ -20,12 +21,14 @@ public class Resource : MonoBehaviour
     private void Start()
     {
         _rigidbody = GetComponent<Rigidbody>();
+        _collider = GetComponent<Collider>();
         _wait = new (_delayToTryTakeAgain);
     }
 
     public void TakeCoin()
     {
         _rigidbody.isKinematic = true;
+        _collider.enabled = false;
         IsTaken = true;
     }
   

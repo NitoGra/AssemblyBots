@@ -47,7 +47,7 @@ public class Unit : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if (Vector3.Distance(transform.position, _target) <= 0.5f)
+        if (Vector3.Distance(transform.position, _target) <= 0.7f)
             GoToBase();
     }
 

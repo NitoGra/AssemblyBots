@@ -43,7 +43,7 @@ public class BaseRoboticAssemblers : MonoBehaviour
     {
         Unit unit = Instantiate(_unitsPrefab);
         unit.transform.parent = transform;
-        unit.transform.position = transform.position;
+        unit.transform.position = transform.position + new Vector3(Random.value, Random.value, Random.value);
         unit.ResourceTakenOnBase += IncreaseAndDisplayRecource;
         _units.Add(unit);
     }
